@@ -105,9 +105,9 @@ body {
     background: rgba(8, 10, 16, 0.85);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(225, 29, 72, 0.35);
+    border: 1px solid rgba(245, 158, 11, 0.4);
     box-shadow: 
-        0 0 16px rgba(225, 29, 72, 0.2),
+        0 0 16px rgba(245, 158, 11, 0.25),
         inset 0 0 10px rgba(0, 0, 0, 0.6);
     border-radius: 12px;
     padding: 6px 0;
@@ -123,11 +123,11 @@ body {
     font-size: 12px;
     font-weight: 900;
     letter-spacing: 2.5px;
-    color: #ff0000 !important;
+    color: #ffd700 !important;
     text-transform: uppercase;
     text-shadow: 
-        0 0 10px rgba(255, 0, 0, 0.9),
-        0 0 20px rgba(255, 0, 0, 0.6);
+        0 0 10px rgba(255, 215, 0, 0.9),
+        0 0 20px rgba(245, 158, 11, 0.6);
     will-change: transform;
 }
 
@@ -414,16 +414,16 @@ body {
     transform: scale(1);
 }
 
-/* Red Title Above WinGo 1 Min AI Result */
+/* Golden Title Above WinGo 1 Min AI Result */
 .popup-brand-title {
-    color: #ff0000 !important;
+    color: #ffd700 !important;
     font-size: 15px;
     font-weight: 900;
     letter-spacing: 2.2px;
     text-transform: uppercase;
     text-shadow: 
-        0 0 12px rgba(255, 0, 0, 0.9),
-        0 0 24px rgba(255, 0, 0, 0.6);
+        0 0 12px rgba(255, 215, 0, 0.9),
+        0 0 25px rgba(245, 158, 11, 0.65);
     margin-bottom: 12px;
     text-align: center;
 }

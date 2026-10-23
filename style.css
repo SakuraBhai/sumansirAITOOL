@@ -1,0 +1,610 @@
+:root {
+    --bg-main: #0a0c10;
+    --card-bg: #11141c;
+    --inner-card-bg: #181c26;
+    --neon-red: #ff1e56;
+    --neon-red-glow: rgba(255, 30, 86, 0.5);
+    --border-red: #e11d48;
+    --btn-red-start: #e11d48;
+    --btn-red-end: #9f1239;
+    --cyan-accent: #00f2fe;
+    --green-accent: #10b981;
+    --text-muted: #8b9bb4;
+    --text-light: #ffffff;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: fixed; /* Prevents bounce scroll on iOS/Android */
+}
+
+body {
+    background: #020306;
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Background Atmosphere - Deep Pitch Black Cyber Void */
+.screen-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 50% 50%, rgba(20, 5, 10, 0.4) 0%, rgba(2, 3, 6, 0.95) 70%, #010204 100%),
+        #020305;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+    overflow: hidden;
+}
+
+/* Subtle Hacker Matrix Rain Canvas */
+#matrixCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.38;
+    filter: contrast(125%) brightness(90%);
+}
+
+.top-section-wrap, .center-hint, .bottom-control-bar {
+    position: relative;
+    z-index: 2;
+}
+
+.top-section-wrap {
+    width: 100%;
+    max-width: 440px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.top-status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    background: rgba(17, 20, 28, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 10px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+/* Sliding Ticker: TRADE WITH BLACK PANTHER */
+.ticker-banner {
+    width: 100%;
+    background: rgba(8, 10, 16, 0.85);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(225, 29, 72, 0.35);
+    box-shadow: 
+        0 0 16px rgba(225, 29, 72, 0.2),
+        inset 0 0 10px rgba(0, 0, 0, 0.6);
+    border-radius: 12px;
+    padding: 6px 0;
+    overflow: hidden;
+    position: relative;
+    white-space: nowrap;
+}
+
+.ticker-slide {
+    display: inline-block;
+    white-space: nowrap;
+    animation: slideLeftToRight 8s linear infinite;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 2.5px;
+    color: #ff0000 !important;
+    text-transform: uppercase;
+    text-shadow: 
+        0 0 10px rgba(255, 0, 0, 0.9),
+        0 0 20px rgba(255, 0, 0, 0.6);
+    will-change: transform;
+}
+
+@keyframes slideLeftToRight {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(min(440px, 100vw));
+    }
+}
+
+.brand-tag {
+    font-weight: 800;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+}
+
+.brand-tag .dot {
+    width: 8px;
+    height: 8px;
+    background: var(--green-accent);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--green-accent);
+    animation: blink 1.8s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+.live-clock-badge {
+    color: var(--cyan-accent);
+    font-family: monospace;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.countdown-badge {
+    background: rgba(225, 29, 72, 0.15);
+    color: #ff4b72;
+    border: 1px solid rgba(225, 29, 72, 0.3);
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 12px;
+    font-family: monospace;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.popup-countdown-strip {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: -10px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+}
+
+.popup-countdown-strip strong {
+    color: var(--cyan-accent);
+    font-family: monospace;
+    font-size: 12px;
+}
+
+@keyframes flashGlow {
+    0% { transform: scale(1); filter: brightness(1); }
+    50% { transform: scale(1.08); filter: brightness(1.6); text-shadow: 0 0 35px #ff2e63; }
+    100% { transform: scale(1); filter: brightness(1); }
+}
+
+/* Center instruction hint (below middle AI button) */
+.center-hint {
+    text-align: center;
+    color: #64748b;
+    font-size: 13px;
+    pointer-events: none;
+    line-height: 1.5;
+    margin-top: 100px; /* Leaves space for the center AI ball */
+}
+
+.center-hint .sparkle {
+    font-size: 22px;
+    display: block;
+    margin-bottom: 4px;
+    animation: float 2.5s infinite ease-in-out;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
+
+/* Subtle bottom period controller */
+.bottom-control-bar {
+    width: 100%;
+    max-width: 440px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(17, 20, 28, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 12px;
+    color: var(--text-muted);
+    z-index: 10;
+}
+
+.period-quick-step {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-icon-step {
+    background: #1f2533;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: all 0.15s;
+}
+
+.btn-icon-step:active {
+    background: var(--border-red);
+    transform: scale(0.92);
+}
+
+.current-period-display {
+    color: var(--cyan-accent);
+    font-weight: 700;
+    font-family: monospace;
+    font-size: 16px;
+    min-width: 28px;
+    text-align: center;
+}
+
+/* FLOATING AI RED CIRCLE / BALL IN THE EXACT MIDDLE */
+.floating-ai-ball-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 999;
+    cursor: pointer;
+    touch-action: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.floating-ai-ball-container:active {
+    transform: translate(-50%, -50%) scale(0.92);
+}
+
+.floating-ai-ball-container.dragged {
+    transform: none; /* When dragging via absolute left/top */
+}
+
+.floating-ai-ball-container.dragged:active {
+    transform: scale(0.92);
+}
+
+.floating-ai-ball {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ff4b72 0%, #e11d48 55%, #880e2a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    position: relative;
+    box-shadow: 
+        0 0 0 3px rgba(255, 75, 114, 0.5),
+        0 0 28px rgba(225, 29, 72, 0.7),
+        0 10px 28px rgba(0, 0, 0, 0.6);
+    animation: pulseRing 2.4s infinite;
+}
+
+.floating-ai-ball::after {
+    content: '';
+    position: absolute;
+    top: -9px;
+    left: -9px;
+    right: -9px;
+    bottom: -9px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 75, 114, 0.4);
+    opacity: 0.8;
+    pointer-events: none;
+    animation: ripple 2.4s infinite;
+}
+
+@keyframes pulseRing {
+    0%, 100% {
+        box-shadow: 
+            0 0 0 3px rgba(255, 75, 114, 0.6),
+            0 0 26px rgba(225, 29, 72, 0.7),
+            0 8px 24px rgba(0, 0, 0, 0.6);
+    }
+    50% {
+        box-shadow: 
+            0 0 0 6px rgba(255, 75, 114, 0.85),
+            0 0 42px rgba(255, 30, 86, 0.95),
+            0 12px 32px rgba(0, 0, 0, 0.8);
+    }
+}
+
+@keyframes ripple {
+    0% { transform: scale(0.95); opacity: 0.8; }
+    50% { transform: scale(1.18); opacity: 0.25; }
+    100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+.ball-text {
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* POPUP OVERLAY MODAL (100% Responsive for Mobile & Desktop) */
+.result-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.82);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+    opacity: 0;
+    transition: opacity 0.22s ease;
+}
+
+.result-modal-backdrop.active {
+    display: flex;
+    opacity: 1;
+}
+
+.result-popup-card {
+    background: #0d1017;
+    width: 100%;
+    max-width: min(92vw, 360px);
+    border-radius: 26px;
+    border: 2px solid #e11d48;
+    box-shadow: 
+        0 0 32px rgba(225, 29, 72, 0.5),
+        0 20px 50px rgba(0, 0, 0, 0.85),
+        inset 0 0 16px rgba(225, 29, 72, 0.18);
+    padding: 24px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    transform: scale(0.85);
+    transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.result-modal-backdrop.active .result-popup-card {
+    transform: scale(1);
+}
+
+/* Red Title Above WinGo 1 Min AI Result */
+.popup-brand-title {
+    color: #ff0000 !important;
+    font-size: 15px;
+    font-weight: 900;
+    letter-spacing: 2.2px;
+    text-transform: uppercase;
+    text-shadow: 
+        0 0 12px rgba(255, 0, 0, 0.9),
+        0 0 24px rgba(255, 0, 0, 0.6);
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+/* Top Pill: WinGo 1 Min AI Result */
+.popup-top-pill {
+    background: rgba(225, 29, 72, 0.12);
+    border: 1px solid #e11d48;
+    color: #ff3b68;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 6px 18px;
+    border-radius: 20px;
+    margin-bottom: 18px;
+    letter-spacing: 0.5px;
+    text-transform: capitalize;
+}
+
+/* Period No row */
+.period-row {
+    font-size: 14px;
+    color: var(--text-muted);
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.period-number-highlight {
+    color: var(--cyan-accent);
+    font-size: 30px;
+    font-weight: 800;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    letter-spacing: 1px;
+}
+
+/* Inner Black Card */
+.inner-result-box {
+    background: #141721;
+    border-radius: 18px;
+    width: 100%;
+    padding: 20px 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4);
+    margin-bottom: 20px;
+}
+
+.predicted-type-label {
+    font-size: 11px;
+    color: #7b8ba5;
+    letter-spacing: 2px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.predicted-outcome-text {
+    font-size: clamp(38px, 11vw, 46px);
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #ff2e63;
+    text-shadow: 
+        0 0 20px rgba(255, 46, 99, 0.8),
+        0 0 40px rgba(255, 46, 99, 0.4);
+    margin-bottom: 12px;
+    line-height: 1;
+}
+
+.sub-details-row {
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.sub-details-row .val-num {
+    color: #fff;
+    font-weight: 800;
+}
+
+.sub-details-row .val-color {
+    font-weight: 800;
+}
+
+.sub-details-row .val-color.green {
+    color: #10b981;
+}
+
+.sub-details-row .val-color.red {
+    color: #ef4444;
+}
+
+.sub-details-row .val-color.violet {
+    color: #a855f7;
+}
+
+/* Accuracy Rate Bar */
+.accuracy-section {
+    width: 100%;
+    margin-bottom: 22px;
+}
+
+.accuracy-text-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.accuracy-label {
+    color: #7b8ba5;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+}
+
+.accuracy-value {
+    color: var(--green-accent);
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.accuracy-progress-track {
+    width: 100%;
+    height: 6px;
+    background: #1e2433;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.accuracy-progress-fill {
+    height: 100%;
+    width: 97.4%;
+    background: var(--green-accent);
+    border-radius: 4px;
+    box-shadow: 0 0 8px var(--green-accent);
+    transition: width 0.4s ease;
+}
+
+/* Close Button */
+.btn-close-result {
+    width: 100%;
+    background: linear-gradient(135deg, #e11d48 0%, #be123c 100%);
+    border: none;
+    border-radius: 16px;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 14px 0;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(225, 29, 72, 0.45);
+    transition: transform 0.12s ease;
+}
+
+.btn-close-result:active {
+    transform: scale(0.96);
+    filter: brightness(0.9);
+}
+
+/* Extra small screen adjustments (like iPhone SE / 320px) */
+@media (max-width: 360px) {
+    .floating-ai-ball {
+        width: 72px;
+        height: 72px;
+        font-size: 24px;
+    }
+    .result-popup-card {
+        padding: 20px 16px 16px;
+    }
+    .predicted-outcome-text {
+        font-size: 36px;
+    }
+}

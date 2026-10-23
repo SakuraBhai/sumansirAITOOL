@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#0a0c10">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>WinGo 1 Min AI Result</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%23e11d48'/><text x='50%' y='55%' font-size='32' font-weight='bold' fill='white' text-anchor='middle' dominant-baseline='middle'>AI</text></svg>">
+</head>
+<body>
+
+    <!-- Main Screen View -->
+    <div class="screen-bg">
+        <!-- Subtle Hacker Matrix Rain Canvas Background -->
+        <canvas id="matrixCanvas"></canvas>
+
+        <!-- Top Section with Status Bar & Sliding Black Panther Banner -->
+        <div class="top-section-wrap">
+            <div class="top-status-bar">
+                <div class="brand-tag">
+                    <span class="dot"></span>
+                    <span>BDG WINGO AI</span>
+                </div>
+                <div class="live-clock-badge" id="liveClockDisplay">10:39:00</div>
+                <div class="countdown-badge">
+                    <span>⏱️</span>
+                    <span id="countdownTimer">00:59</span>
+                </div>
+            </div>
+
+            <!-- New Sliding Line: TRADE WITH BLACK PANTHER -->
+            <div class="ticker-banner">
+                <div class="ticker-slide" style="color: #ff0000 !important;">
+                    <span style="color: #ff0000 !important; font-weight: 900;">TRADE WITH BLACK PANTHER</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Center Guide / Instruction -->
+        <div class="center-hint">
+            <span class="sparkle">🎯</span>
+            <div>Tap <strong>AI</strong> to reveal prediction</div>
+            <div style="font-size: 11px; opacity: 0.6; margin-top: 4px; letter-spacing: 1px;">1 MIN AUTO SYNC</div>
+        </div>
+
+        <!-- Bottom Discreet Controls -->
+        <div class="bottom-control-bar">
+            <span>LIVE PERIOD:</span>
+            <div class="period-quick-step">
+                <span class="current-period-display" id="screenPeriodNum">---</span>
+            </div>
+            <div class="mode-tag">WinGo 1 Min Auto</div>
+        </div>
+    </div>
+
+    <!-- Draggable Floating Red "AI" Ball in Center -->
+    <div class="floating-ai-ball-container" id="floatingAiBall">
+        <div class="floating-ai-ball">
+            <span class="ball-text">AI</span>
+        </div>
+    </div>
+
+    <!-- Prediction Result Modal Card (Matching Screenshot 1 & 2) -->
+    <div class="result-modal-backdrop" id="resultModalBackdrop" onclick="handleBackdropClick(event)">
+        <div class="result-popup-card" id="popupCard">
+            
+            <!-- Red Title Above WinGo 1 Min AI Result -->
+            <div class="popup-brand-title" style="color: #ff0000 !important; font-weight: 900; text-shadow: 0 0 12px #ff0000;">TRADE WITH BLACK PANTHER</div>
+
+            <!-- Top Tag & Round Countdown -->
+            <div class="popup-top-pill">WinGo 1 Min AI Result</div>
+            <div class="popup-countdown-strip">
+                <span>NEXT RESULT IN:</span>
+                <strong id="popupCountdownTimer">00:59</strong>
+            </div>
+
+            <!-- Period No -->
+            <div class="period-row">
+                <span>PERIOD NO:</span>
+                <span class="period-number-highlight" id="popupPeriodNumber">---</span>
+            </div>
+
+            <!-- Inner Dark Card -->
+            <div class="inner-result-box" id="innerResultBox">
+                <div class="predicted-type-label">PREDICTED TYPE</div>
+                <div class="predicted-outcome-text" id="predictedOutcome">SMALL</div>
+                <div class="sub-details-row">
+                    <span>NUMBER: <span class="val-num" id="predictedNumber">3</span></span>
+                    <span>COLOR: <span class="val-color green" id="predictedColor">Green</span></span>
+                </div>
+            </div>
+
+            <!-- Accuracy Section -->
+            <div class="accuracy-section">
+                <div class="accuracy-text-row">
+                    <span class="accuracy-label">ACCURACY RATE</span>
+                    <span class="accuracy-value" id="accuracyRateText">97.4%</span>
+                </div>
+                <div class="accuracy-progress-track">
+                    <div class="accuracy-progress-fill" id="accuracyBarFill" style="width: 97.4%;"></div>
+                </div>
+            </div>
+
+            <!-- Close Button -->
+            <button class="btn-close-result" onclick="closePredictionResult()">CLOSE RESULT</button>
+            
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="sample_data.js"></script>
+    <script src="ai-engine.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

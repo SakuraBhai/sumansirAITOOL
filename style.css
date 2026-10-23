@@ -214,19 +214,7 @@ body {
     font-size: 13px;
     pointer-events: none;
     line-height: 1.5;
-    margin-top: 100px; /* Leaves space for the center AI ball */
-}
-
-.center-hint .sparkle {
-    font-size: 22px;
-    display: block;
-    margin-bottom: 4px;
-    animation: float 2.5s infinite ease-in-out;
-}
-
-@keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
+    margin-top: 110px; /* Leaves space for the center AI ball */
 }
 
 /* Subtle bottom period controller */

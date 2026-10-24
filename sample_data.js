@@ -256,3 +256,10 @@ function getNumberAttributes(num) {
     }
     return { number: num, bigSmall, color };
 }
+
+if (typeof window !== "undefined") {
+    window.SAMPLE_DATA = SAMPLE_DATA;
+}
+if (typeof module !== "undefined" && module.exports) {
+    module.exports = { SAMPLE_DATA };
+}

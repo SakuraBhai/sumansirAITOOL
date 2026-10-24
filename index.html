@@ -7,10 +7,27 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>WinGo 1 Min AI Result</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=2.1">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%23e11d48'/><text x='50%' y='55%' font-size='32' font-weight='bold' fill='white' text-anchor='middle' dominant-baseline='middle'>AI</text></svg>">
 </head>
 <body>
+
+    <!-- VIP License Key Lock Screen Gate (App Lock) -->
+    <div class="key-gate-overlay" id="keyGateOverlay">
+        <div class="key-gate-card" id="keyGateCard">
+            <div class="key-gate-badge">TRADE WITH BLACK PANTHER</div>
+            <div class="key-gate-icon">🔐</div>
+            <div class="key-gate-title">AI VIP ACCESS KEY</div>
+            <div class="key-gate-subtitle">Enter license key to unlock AI predictor</div>
+            
+            <div class="key-input-wrap">
+                <input type="text" id="accessKeyInput" placeholder="ENTER ACCESS KEY" autocomplete="off" spellcheck="false" onkeydown="handleKeyEnter(event)">
+                <div class="key-error-msg" id="keyErrorMsg"></div>
+            </div>
+
+            <button class="btn-unlock-gate" onclick="validateAccessKey()">UNLOCK AI PREDICTOR</button>
+        </div>
+    </div>
 
     <!-- Main Screen View -->
     <div class="screen-bg">
@@ -64,7 +81,7 @@
 
     <!-- Prediction Result Modal Card (Matching Screenshot 1 & 2) -->
     <div class="result-modal-backdrop" id="resultModalBackdrop" onclick="handleBackdropClick(event)">
-        <div class="result-popup-card" id="popupCard">
+        <div class="result-popup-card" id="popupCard" style="border: 2px solid #00ff88 !important; box-shadow: 0 0 45px rgba(0, 255, 136, 0.7), inset 0 0 20px rgba(0, 255, 136, 0.3) !important;">
             
             <!-- Golden Title Above WinGo 1 Min AI Result -->
             <div class="popup-brand-title" style="color: #ffd700 !important; font-weight: 900; text-shadow: 0 0 12px rgba(255, 215, 0, 0.9);">TRADE WITH BLACK PANTHER</div>
@@ -110,8 +127,44 @@
     </div>
 
     <!-- Scripts -->
+    <script>
+    // Strict Master Keys: Only these 2 keys are allowed
+    var ALLOWED_KEYS = ["PANTHER777", "SUMAN869"];
+
+    function validateAccessKey() {
+        var input = document.getElementById("accessKeyInput");
+        var overlay = document.getElementById("keyGateOverlay");
+        var errorEl = document.getElementById("keyErrorMsg");
+        var card = document.getElementById("keyGateCard");
+        if (!input || !overlay) return;
+        var val = input.value.trim().toUpperCase();
+        if (!val) {
+            if (errorEl) errorEl.textContent = "कृपया VIP Key दर्ज करें (Enter VIP Key)";
+            shakeCard();
+            return;
+        }
+        if (!ALLOWED_KEYS.includes(val)) {
+            if (errorEl) errorEl.textContent = "❌ गलत VIP Key! केवल अधिकृत Key ही मान्य है";
+            shakeCard();
+            return;
+        }
+        if (errorEl) errorEl.textContent = "";
+        overlay.style.display = "none";
+    }
+    function shakeCard() {
+        var card = document.getElementById("keyGateCard");
+        if (card) {
+            card.style.animation = "none";
+            card.offsetHeight;
+            card.style.animation = "shake 0.4s ease";
+        }
+    }
+    function handleKeyEnter(e) {
+        if (e.key === "Enter") validateAccessKey();
+    }
+    </script>
     <script src="sample_data.js"></script>
     <script src="ai-engine.js"></script>
-    <script src="app.js"></script>
+    <script src="app.js?v=3.1"></script>
 </body>
 </html>

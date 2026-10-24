@@ -68,7 +68,8 @@ function getPredictionForPeriod(periodNum) {
     const sumDigits = s.split('').reduce((acc, c) => acc + parseInt(c, 10), 0);
     
     // 1. Historical occurrences for this period ending digit in the 200 rounds
-    const matches = SAMPLE_DATA.filter(item => parseInt(item.period.slice(-1), 10) === lastD);
+    const dataset = (typeof window !== "undefined" && window.SAMPLE_DATA) || (typeof SAMPLE_DATA !== "undefined" ? SAMPLE_DATA : []);
+    const matches = dataset.filter(item => parseInt(item.period.slice(-1), 10) === lastD);
     const histBigs = matches.filter(m => m.bigSmall === 'Big').length;
     const histSmalls = matches.length - histBigs;
 
@@ -185,6 +186,7 @@ function renderPopupResult(periodDisplay) {
     }
 
     const data = getPredictionForPeriod(periodFull);
+    if (!data) return;
 
     const outcomeEl = document.getElementById("predictedOutcome");
     const numberEl = document.getElementById("predictedNumber");
@@ -193,28 +195,46 @@ function renderPopupResult(periodDisplay) {
     const accuracyText = document.getElementById("accuracyRateText");
     const accuracyBar = document.getElementById("accuracyBarFill");
 
-    periodEl.textContent = periodDisplay;
-    outcomeEl.textContent = data.prediction;
+    if (periodEl) periodEl.textContent = periodDisplay;
+    if (outcomeEl) {
+        outcomeEl.textContent = data.prediction;
+        outcomeEl.style.animation = "none";
+        outcomeEl.offsetHeight; // trigger reflow
+        outcomeEl.style.animation = "flashGlow 0.6s ease";
+    }
 
-    // Pulse animation on outcome change
-    outcomeEl.style.animation = "none";
-    outcomeEl.offsetHeight; // trigger reflow
-    outcomeEl.style.animation = "flashGlow 0.6s ease";
+    if (numberEl) numberEl.textContent = data.number;
+    if (colorEl) {
+        colorEl.textContent = data.color;
+        colorEl.className = `val-color ${data.color.toLowerCase()}`;
+    }
 
-    numberEl.textContent = data.number;
-    colorEl.textContent = data.color;
-    colorEl.className = `val-color ${data.color.toLowerCase()}`;
-
-    accuracyText.textContent = data.accuracy;
-    accuracyBar.style.width = data.accuracy;
+    if (accuracyText) accuracyText.textContent = data.accuracy;
+    if (accuracyBar) accuracyBar.style.width = data.accuracy;
 }
 
+// VIP Access Key Gate Logic: Only these 2 keys are allowed
+window.ALLOWED_KEYS = ["PANTHER777", "SUMAN869"];
+
+let _lastOpenTime = 0;
 // Open prediction modal
-function openPredictionResult() {
-    fx.open();
-    const periodFull = getLivePeriodNumber();
-    const periodDisplay = String(periodFull).slice(-3);
-    renderPopupResult(periodDisplay);
+function openPredictionResult(e) {
+    if (e && e.stopPropagation) {
+        e.stopPropagation();
+    }
+    const now = Date.now();
+    if (now - _lastOpenTime < 250) return; // Prevent accidental double firing
+    _lastOpenTime = now;
+
+    try { fx.open(); } catch(err) {}
+
+    try {
+        const periodFull = getLivePeriodNumber();
+        const periodDisplay = String(periodFull).slice(-3);
+        renderPopupResult(periodDisplay);
+    } catch(err) {
+        console.error("Error calculating prediction:", err);
+    }
 
     const card = document.getElementById("popupCard");
     if (card) {
@@ -223,11 +243,10 @@ function openPredictionResult() {
     }
 
     const modal = document.getElementById("resultModalBackdrop");
-    modal.classList.add("active");
+    if (modal) {
+        modal.classList.add("active");
+    }
 }
-
-// VIP Access Key Gate Logic: Only these 2 keys are allowed
-const ALLOWED_KEYS = ["PANTHER777", "SUMAN869"];
 
 function checkKeyGateStatus() {
     try {
@@ -262,7 +281,8 @@ function validateAccessKey() {
         return;
     }
 
-    if (!ALLOWED_KEYS.includes(val)) {
+    const allowed = window.ALLOWED_KEYS || ["PANTHER777", "SUMAN869"];
+    if (!allowed.includes(val)) {
         if (errorEl) errorEl.textContent = "❌ गलत VIP Key! केवल अधिकृत Key ही मान्य है";
         shakeKeyCard();
         return;
@@ -282,17 +302,18 @@ function shakeKeyCard() {
     card.style.animation = "shake 0.4s ease";
 }
 
-// Close prediction modal
+// Close prediction modal (Only closes when CLOSE RESULT button is clicked)
 function closePredictionResult() {
     fx.beep(400, 0.08);
     const modal = document.getElementById("resultModalBackdrop");
-    modal.classList.remove("active");
+    if (modal) {
+        modal.classList.remove("active");
+    }
 }
 
 function handleBackdropClick(event) {
-    if (event.target.id === "resultModalBackdrop") {
-        closePredictionResult();
-    }
+    // Backdrop click disabled to prevent accidental closing!
+    // Modal will stay open until CLOSE RESULT button is clicked.
 }
 
 // Initialize floating AI ball
@@ -348,7 +369,6 @@ function initFloatingBall() {
     // Mouse events
     ball.addEventListener("mousedown", (e) => {
         startDrag(e.clientX, e.clientY);
-        e.preventDefault();
     });
     window.addEventListener("mousemove", (e) => moveDrag(e.clientX, e.clientY));
     window.addEventListener("mouseup", endDrag);
@@ -366,12 +386,13 @@ function initFloatingBall() {
     window.addEventListener("touchend", endDrag);
 
     // Open result when clicked (if not dragged)
-    ball.addEventListener("click", () => {
+    ball.addEventListener("click", (e) => {
+        if (e && e.stopPropagation) e.stopPropagation();
         if (hasMoved) {
             hasMoved = false;
             return;
         }
-        openPredictionResult();
+        openPredictionResult(e);
     });
 }
 
@@ -404,8 +425,10 @@ function initHackerMatrix() {
     let lastDraw = 0;
     const fpsInterval = 1000 / 28; // Smooth 28 fps for subtle hacker stream
 
+    const raf = window.requestAnimationFrame || window.webkitRequestAnimationFrame || function(cb) { return setTimeout(cb, 33); };
+
     function drawMatrix(timestamp) {
-        requestAnimationFrame(drawMatrix);
+        raf(drawMatrix);
         if (timestamp - lastDraw < fpsInterval) return;
         lastDraw = timestamp;
 
@@ -439,14 +462,24 @@ function initHackerMatrix() {
         }
     }
 
-    requestAnimationFrame(drawMatrix);
+    raf(drawMatrix);
 }
 
-// Start live 1-second interval loop on load
-document.addEventListener("DOMContentLoaded", () => {
-    checkKeyGateStatus();
-    initHackerMatrix();
-    initFloatingBall();
-    tickClock();
-    setInterval(tickClock, 1000); // Ticks every exact second
-});
+// Guaranteed initialization that works whether document is already loaded or still loading
+function startApp() {
+    try { checkKeyGateStatus(); } catch(e) { console.error(e); }
+    try { initHackerMatrix(); } catch(e) { console.error(e); }
+    try { initFloatingBall(); } catch(e) { console.error(e); }
+    try { tickClock(); } catch(e) { console.error(e); }
+    try { 
+        if (window._clockInterval) clearInterval(window._clockInterval);
+        window._clockInterval = setInterval(tickClock, 1000); 
+    } catch(e) { console.error(e); }
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", startApp);
+} else {
+    // Document already loaded - run immediately!
+    startApp();
+}

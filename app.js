@@ -216,8 +216,70 @@ function openPredictionResult() {
     const periodDisplay = String(periodFull).slice(-3);
     renderPopupResult(periodDisplay);
 
+    const card = document.getElementById("popupCard");
+    if (card) {
+        card.style.border = "2px solid #00ff88";
+        card.style.boxShadow = "0 0 45px rgba(0, 255, 136, 0.75), inset 0 0 20px rgba(0, 255, 136, 0.35)";
+    }
+
     const modal = document.getElementById("resultModalBackdrop");
     modal.classList.add("active");
+}
+
+// VIP Access Key Gate Logic: Only these 2 keys are allowed
+const ALLOWED_KEYS = ["PANTHER777", "SUMAN869"];
+
+function checkKeyGateStatus() {
+    try {
+        const overlay = document.getElementById("keyGateOverlay");
+        if (!overlay) return;
+        overlay.style.display = "flex";
+        const input = document.getElementById("accessKeyInput");
+        if (input) {
+            input.value = "";
+            setTimeout(() => input.focus(), 300);
+        }
+    } catch(e) {}
+}
+
+function handleKeyEnter(event) {
+    if (event.key === "Enter") {
+        validateAccessKey();
+    }
+}
+
+function validateAccessKey() {
+    const input = document.getElementById("accessKeyInput");
+    const errorEl = document.getElementById("keyErrorMsg");
+    const overlay = document.getElementById("keyGateOverlay");
+    if (!overlay) return;
+
+    const val = input ? input.value.trim().toUpperCase() : "";
+
+    if (!val) {
+        if (errorEl) errorEl.textContent = "कृपया VIP Key दर्ज करें (Enter VIP Key)";
+        shakeKeyCard();
+        return;
+    }
+
+    if (!ALLOWED_KEYS.includes(val)) {
+        if (errorEl) errorEl.textContent = "❌ गलत VIP Key! केवल अधिकृत Key ही मान्य है";
+        shakeKeyCard();
+        return;
+    }
+
+    if (errorEl) errorEl.textContent = "";
+    try { fx.newRound(); } catch(e){}
+    overlay.style.display = "none";
+}
+
+function shakeKeyCard() {
+    try { fx.beep(250, 0.15); } catch(e){}
+    const card = document.getElementById("keyGateCard");
+    if (!card) return;
+    card.style.animation = "none";
+    card.offsetHeight;
+    card.style.animation = "shake 0.4s ease";
 }
 
 // Close prediction modal
@@ -382,6 +444,7 @@ function initHackerMatrix() {
 
 // Start live 1-second interval loop on load
 document.addEventListener("DOMContentLoaded", () => {
+    checkKeyGateStatus();
     initHackerMatrix();
     initFloatingBall();
     tickClock();

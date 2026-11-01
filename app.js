@@ -276,6 +276,9 @@ function tickClock() {
         lastComputedMinute = currentMinute;
         handleNewMinuteArrived(periodDisplay);
     }
+
+    // Enforce night lock if unlocked with regular key and time enters 12:05 AM - 7:05 AM
+    enforceNightAccessLock();
 }
 
 // When minute changes (e.g. exactly at :00 second)
@@ -323,8 +326,35 @@ function renderPopupResult(periodDisplay) {
     if (accuracyBar) accuracyBar.style.width = data.accuracy;
 }
 
-// VIP Access Key Gate Logic: Only these 2 keys are allowed
-window.ALLOWED_KEYS = ["PANTHER777", "SUMAN869"];
+// VIP Access Key Gate Logic
+window.REGULAR_KEYS = ["PANTHER777", "SUMAN869"];
+window.NIGHT_ADMIN_KEY = "SUMAN1207";
+window.ALLOWED_KEYS = ["PANTHER777", "SUMAN869", "SUMAN1207"];
+
+let activeUnlockedKey = null;
+
+// Check if current time is between 12:05 AM (00:05) and 7:05 AM (07:05)
+function isNightRestrictedTime() {
+    const now = new Date();
+    const totalMinutes = now.getHours() * 60 + now.getMinutes();
+    // 12:05 AM = 5 minutes, 7:05 AM = 7 * 60 + 5 = 425 minutes
+    return totalMinutes >= 5 && totalMinutes <= 425;
+}
+
+function enforceNightAccessLock() {
+    if (!activeUnlockedKey) return;
+    if (isNightRestrictedTime() && window.REGULAR_KEYS.includes(activeUnlockedKey)) {
+        activeUnlockedKey = null;
+        const modal = document.getElementById("resultModalBackdrop");
+        if (modal) modal.classList.remove("active");
+        const overlay = document.getElementById("keyGateOverlay");
+        if (overlay) overlay.style.display = "flex";
+        const errorEl = document.getElementById("keyErrorMsg");
+        if (errorEl) {
+            errorEl.textContent = "⚠️ Night Access Restricted (12:05 AM - 7:05 AM)! Please Contact Admin";
+        }
+    }
+}
 
 let _lastOpenTime = 0;
 // Open prediction modal
@@ -391,13 +421,37 @@ function validateAccessKey() {
         return;
     }
 
-    const allowed = window.ALLOWED_KEYS || ["PANTHER777", "SUMAN869"];
-    if (!allowed.includes(val)) {
-        if (errorEl) errorEl.textContent = "❌ गलत VIP Key! केवल अधिकृत Key ही मान्य है";
-        shakeKeyCard();
-        return;
+    const regularKeys = window.REGULAR_KEYS || ["PANTHER777", "SUMAN869"];
+    const nightKey = window.NIGHT_ADMIN_KEY || "SUMAN1207";
+
+    // Night window: 12:05 AM to 7:05 AM
+    if (isNightRestrictedTime()) {
+        if (regularKeys.includes(val)) {
+            if (errorEl) {
+                errorEl.textContent = "⚠️ This Key is Disabled (12:05 AM - 7:05 AM)! Please Contact Admin";
+            }
+            shakeKeyCard();
+            return;
+        }
+        if (val !== nightKey) {
+            if (errorEl) {
+                errorEl.textContent = "❌ गलत VIP Key! कृपया Contact Admin करें";
+            }
+            shakeKeyCard();
+            return;
+        }
+    } else {
+        // Day/Evening window: both regular keys and SUMAN1207 work
+        if (!regularKeys.includes(val) && val !== nightKey) {
+            if (errorEl) {
+                errorEl.textContent = "❌ गलत VIP Key! केवल अधिकृत Key ही मान्य है";
+            }
+            shakeKeyCard();
+            return;
+        }
     }
 
+    activeUnlockedKey = val;
     if (errorEl) errorEl.textContent = "";
     try { fx.newRound(); } catch(e){}
     overlay.style.display = "none";
